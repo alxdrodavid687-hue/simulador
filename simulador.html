@@ -28,7 +28,7 @@
         <label for="txtPlazo">Plazo en años:</label>
         <input type="text" id="txtPlazo">
 
-        <label for="txtTasaInteres">Tasa de interés:</label>
+        <label for="txtTasaInteres">Tasa de interés (% anual):</label>
         <input type="text" id="txtTasaInteres">
 
         <p>Interés a pagar: <span id="spnInteresPagar"></span></p>
@@ -42,5 +42,10 @@
         </div>
     </div>
 
+    <!-- PRIMERO: Lógica de negocio -->
+    <script src="funciones.js"></script>
+    <!-- SEGUNDO: Manipulación del DOM -->
+    <script src="simulador.js"></script>
+    
 </body>
 </html>
