@@ -7,6 +7,7 @@ const txtTasaInteres = document.getElementById('txtTasaInteres');
 const lblDisponibleValor = document.getElementById('lblDisponibleValor');
 const lblCapacidadValor = document.getElementById('lblCapacidadValor');
 const lblInteresValor = document.getElementById('lblInteresValor');
+const lblTotalValor = document.getElementById('lblTotalValor'); // NUEVA REFERENCIA
 
 // === FUNCIÓN CALCULAR ===
 // Esta función no recibe parámetros
@@ -40,12 +41,18 @@ function calcular() {
     // 9. Mostrar en pantalla, en el componente lblInteresValor
     lblInteresValor.textContent = interesPagar;
     
-    // Retornar los valores por si se necesitan en otros cálculos
-    return { disponible, capacidadPago, interesPagar };
+    // 10. Invocar a calcularTotalPagar
+    const totalPagar = calcularTotalPagar(monto, interesPagar);
+    
+    // 11. Mostrar en pantalla, en el componente lblTotalValor
+    lblTotalValor.textContent = totalPagar;
+    
+    // Retornar los valores incluyendo el total a pagar
+    return { disponible, capacidadPago, interesPagar, totalPagar };
 }
 
-// === FUNCIÓN PARA ACTUALIZAR SOLO EL INTERÉS ===
-function actualizarInteres() {
+// === FUNCIÓN PARA ACTUALIZAR SOLO EL INTERÉS Y TOTAL ===
+function actualizarInteresYTotal() {
     const monto = parseInt(txtMonto.value) || 0;
     const plazoAnios = parseInt(txtPlazo.value) || 0;
     const tasaAnual = parseInt(txtTasaInteres.value) || 0;
@@ -53,24 +60,25 @@ function actualizarInteres() {
     const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
     lblInteresValor.textContent = interesPagar;
     
-    return interesPagar;
+    // Actualizar también el total cuando cambian los valores
+    const totalPagar = calcularTotalPagar(monto, interesPagar);
+    lblTotalValor.textContent = totalPagar;
+    
+    return { interesPagar, totalPagar };
 }
 
 // === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
 function calcularCredito() {
     // Llamar a la función calcular que actualiza todos los valores
-    const { disponible, capacidadPago, interesPagar } = calcular();
+    const { disponible, capacidadPago, interesPagar, totalPagar } = calcular();
     
     // Obtener valores actualizados
     const monto = parseInt(txtMonto.value) || 0;
     const plazo = parseInt(txtPlazo.value) || 0;
     
-    // Calcular total a pagar usando la función calcularTotalPagar
-    // Incluye: monto + interés + USD 100 (impuestos SOLCA)
-    const totalPrestamo = calcularTotalPagar(monto, interesPagar);
-    
+    // Usar el totalPagar ya calculado (incluye SOLCA)
     // Calcular cuota mensual (total / (plazo * 12))
-    const cuotaMensual = plazo > 0 ? totalPrestamo / (plazo * 12) : 0;
+    const cuotaMensual = plazo > 0 ? totalPagar / (plazo * 12) : 0;
     
     // Evaluar estado del crédito (la cuota no debe superar la capacidad de pago)
     let estadoCredito = "ANALIZANDO...";
@@ -83,7 +91,6 @@ function calcularCredito() {
     }
     
     // Mostrar resultados adicionales en pantalla
-    document.getElementById('spnTotalPrestamo').textContent = totalPrestamo.toFixed(2);
     document.getElementById('spnCuotaMensual').textContent = cuotaMensual.toFixed(2);
     document.getElementById('spnEstadoCredito').textContent = estadoCredito;
     
@@ -111,7 +118,7 @@ function reiniciar() {
     lblDisponibleValor.textContent = '';
     lblCapacidadValor.textContent = '';
     lblInteresValor.textContent = '';
-    document.getElementById('spnTotalPrestamo').textContent = '';
+    lblTotalValor.textContent = '';
     document.getElementById('spnCuotaMensual').textContent = '';
     const spnEstadoCredito = document.getElementById('spnEstadoCredito');
     spnEstadoCredito.textContent = 'ANALIZANDO...';
@@ -128,17 +135,17 @@ txtEgresos.addEventListener('input', function() {
     calcular();
 });
 
-// Actualizar interés cuando cambien monto, plazo o tasa
+// Actualizar interés y total cuando cambien monto, plazo o tasa
 txtMonto.addEventListener('input', function() {
-    actualizarInteres();
+    actualizarInteresYTotal();
 });
 
 txtPlazo.addEventListener('input', function() {
-    actualizarInteres();
+    actualizarInteresYTotal();
 });
 
 txtTasaInteres.addEventListener('input', function() {
-    actualizarInteres();
+    actualizarInteresYTotal();
 });
 
 // Evento para el botón Calcular Crédito
