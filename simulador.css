@@ -1,70 +1,502 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
+/* ===== RESET Y VARIABLES ===== */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Colores principales del Banco Atlántida */
+    --primary-blue: #003366;
+    --primary-blue-dark: #002244;
+    --primary-blue-light: #1a4d8c;
+    --secondary-gold: #c9a03d;
+    --secondary-gold-light: #d4af37;
+    --secondary-gold-dark: #a07828;
+    
+    /* Colores de apoyo */
+    --success-green: #27ae60;
+    --error-red: #e74c3c;
+    --warning-orange: #f39c12;
+    --info-blue: #3498db;
+    
+    /* Neutros */
+    --white: #ffffff;
+    --gray-light: #f8f9fa;
+    --gray-medium: #e9ecef;
+    --gray-dark: #6c757d;
+    --text-dark: #2c3e50;
+    --text-gray: #495057;
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1);
+    
+    /* Bordes */
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+}
+
+/* ===== ESTILOS GENERALES ===== */
+body {
+    font-family: 'Segoe UI', 'Poppins', 'Roboto', Arial, sans-serif;
+    background: linear-gradient(135deg, #e8f0fe 0%, #d1e0f5 100%);
+    min-height: 100vh;
+    padding: 40px 20px;
 }
 
 .container {
-    width: 400px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-xl);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 35px -12px rgba(0,0,0,0.2);
+}
+
+/* ===== HEADER CON LOGO ===== */
+.header-logo {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    padding: 25px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-logo::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.logo-icon {
+    font-size: 48px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.logo-text {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 2px;
+}
+
+.logo-text span {
+    color: var(--secondary-gold);
+    font-weight: 800;
+}
+
+.logo-subtitle {
+    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-top: 5px;
+}
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+.content {
+    padding: 30px;
+}
+
+/* ===== TÍTULOS DE SECCIÓN ===== */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--secondary-gold);
+}
+
+.section-title i {
+    font-size: 24px;
+    color: var(--secondary-gold);
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 20px;
+    font-size: 0;
+    margin: 0;
 }
 
 h2 {
-    margin-top: 20px;
     font-size: 18px;
+    margin: 0;
+}
+
+/* ===== FORMULARIO ===== */
+.form-group {
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
-    margin-top: 10px;
-    font-weight: bold;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+label i {
+    margin-right: 8px;
+    color: var(--secondary-gold);
+    width: 20px;
 }
 
 input {
     width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 2px solid var(--gray-medium);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+    background-color: var(--white);
+    font-family: inherit;
 }
 
-p {
-    margin-top: 10px;
+input:hover {
+    border-color: var(--gray-dark);
 }
 
-span {
-    font-weight: bold;
-    color: #2c3e50;
+input:focus {
+    outline: none;
+    border-color: var(--secondary-gold);
+    box-shadow: 0 0 0 3px rgba(201, 160, 61, 0.1);
 }
 
+/* ===== TARJETAS DE RESULTADOS ===== */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.result-card {
+    background: linear-gradient(135deg, var(--gray-light) 0%, var(--white) 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 18px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-medium);
+}
+
+.result-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--secondary-gold-light);
+}
+
+.result-label {
+    font-size: 13px;
+    color: var(--gray-dark);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.result-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+.result-card.positive .result-value {
+    color: var(--success-green);
+}
+
+.result-card.warning .result-value {
+    color: var(--warning-orange);
+}
+
+.result-card.negative .result-value {
+    color: var(--error-red);
+}
+
+.result-card.primary .result-value {
+    color: var(--primary-blue);
+}
+
+/* ===== SECCIÓN DE CRÉDITO ===== */
+.credit-section {
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8edf3 100%);
+    border-radius: var(--border-radius-lg);
+    padding: 20px;
+    margin-top: 25px;
+}
+
+/* ===== ESTADO DEL CRÉDITO ===== */
+.status-container {
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.status-container.approved {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 2px solid var(--success-green);
+}
+
+.status-container.rejected {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border: 2px solid var(--error-red);
+}
+
+.status-container.analyzing {
+    background: linear-gradient(135deg, #e2e3e5 0%, #d6d8db 100%);
+    border: 2px solid var(--gray-dark);
+}
+
+.status-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.status-text {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.status-container.approved .status-text {
+    color: #155724;
+}
+
+.status-container.rejected .status-text {
+    color: #721c24;
+}
+
+.status-container.analyzing .status-text {
+    color: var(--text-gray);
+}
+
+/* ===== BOTONES ===== */
 .buttons {
-    margin-top: 20px;
     display: flex;
-    justify-content: space-between;
+    gap: 15px;
+    margin-top: 25px;
 }
 
-button {
-    width: 48%;
-    padding: 10px;
+.btn {
+    flex: 1;
+    padding: 14px 24px;
     border: none;
-    border-radius: 5px;
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: 16px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: inherit;
 }
 
-button:hover {
-    background-color: #2980b9;
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--primary-blue-dark) 0%, var(--primary-blue) 100%);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--gray-medium) 0%, var(--gray-light) 100%);
+    color: var(--text-dark);
+    border: 1px solid var(--gray-dark);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, var(--gray-dark) 0%, var(--gray-medium) 100%);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background-color: var(--gray-light);
+    padding: 15px 30px;
+    text-align: center;
+    border-top: 1px solid var(--gray-medium);
+    font-size: 12px;
+    color: var(--gray-dark);
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 15px;
+    }
+    
+    .content {
+        padding: 20px;
+    }
+    
+    .logo-text {
+        font-size: 24px;
+    }
+    
+    .logo-icon {
+        font-size: 36px;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .result-value {
+        font-size: 20px;
+    }
+    
+    .status-text {
+        font-size: 18px;
+    }
+    
+    .status-icon {
+        font-size: 36px;
+    }
+    
+    .buttons {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    .section-title {
+        font-size: 18px;
+    }
+    
+    .credit-section {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 20px;
+    }
+    
+    .logo-subtitle {
+        font-size: 11px;
+    }
+    
+    .result-card {
+        padding: 12px;
+    }
+    
+    .result-value {
+        font-size: 18px;
+    }
+    
+    input {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-card, .credit-section {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* ===== UTILIDADES ===== */
+.text-center {
+    text-align: center;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+/* ===== ESTILO PARA INPUTS CON VALOR MONETARIO ===== */
+input[type="text"] {
+    font-weight: 500;
+}
+
+/* ===== SCROLLBAR PERSONALIZADA ===== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-light);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-blue-dark);
 }

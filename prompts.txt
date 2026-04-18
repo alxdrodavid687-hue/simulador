@@ -1,0 +1,10 @@
+PROMPT 1
+eres un desarrollador ux/ui con ello realiza cambios del código CSS con la finalidad de 
+brindarle un aspecto empresarial, responsive. 
+Elige el logo, colores del Banco Atlantida
+PROMPT 2
+gran trabajo ahora deseo que coloques una pequeña explicación guia para el usuario de lo que corresponde: ingresos mensuales,
+egresos mensuales, monto solicitado. Para el caso del monto solicitado incluye que los valores van desde $5000 a $50000
+Además explicación sencilla: que condiciones permiten/no permite aprobar un crédito.
+Una observación: la parte "analizando" da el resultado sin necesidad de aplastar el botón calcular crédito. 
+Por favor corrige esa observación

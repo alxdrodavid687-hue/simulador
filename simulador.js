@@ -9,9 +9,39 @@ const lblCapacidadValor = document.getElementById('lblCapacidadValor');
 const lblInteresValor = document.getElementById('lblInteresValor');
 const lblTotalValor = document.getElementById('lblTotalValor');
 const lblCuotaValor = document.getElementById('lblCuotaValor');
+const statusContainer = document.getElementById('statusContainer');
+
+// === FUNCIÓN PARA ACTUALIZAR EL ESTILO DEL ESTADO ===
+function actualizarEstiloEstado(mensaje) {
+    // Remover clases existentes
+    statusContainer.classList.remove('approved', 'rejected', 'analyzing');
+    
+    // Agregar clase según el mensaje
+    if (mensaje === "CREDITO APROBADO") {
+        statusContainer.classList.add('approved');
+        // Cambiar icono
+        const iconElement = statusContainer.querySelector('.status-icon i');
+        if (iconElement) {
+            iconElement.className = 'fas fa-check-circle';
+        }
+    } else if (mensaje.includes("RECHAZADO")) {
+        statusContainer.classList.add('rejected');
+        // Cambiar icono
+        const iconElement = statusContainer.querySelector('.status-icon i');
+        if (iconElement) {
+            iconElement.className = 'fas fa-times-circle';
+        }
+    } else {
+        statusContainer.classList.add('analyzing');
+        // Cambiar icono
+        const iconElement = statusContainer.querySelector('.status-icon i');
+        if (iconElement) {
+            iconElement.className = 'fas fa-chart-simple';
+        }
+    }
+}
 
 // === FUNCIÓN CALCULAR ===
-// Esta función no recibe parámetros
 function calcular() {
     // 1. Leer el valor de ingresos (float)
     const ingresos = parseFloat(txtIngresos.value) || 0;
@@ -23,13 +53,13 @@ function calcular() {
     const disponible = calcularDisponible(ingresos, egresos);
     
     // 4. Mostrar en pantalla, en el componente lblDisponibleValor
-    lblDisponibleValor.textContent = disponible;
+    lblDisponibleValor.textContent = `$${disponible.toFixed(2)}`;
     
     // 5. Llamar a la función calcularCapacidadPago y guardar el retorno en una variable
     const capacidadPago = calcularCapacidadPago(disponible);
     
     // 6. Mostrar en pantalla, en el componente lblCapacidadValor
-    lblCapacidadValor.textContent = capacidadPago;
+    lblCapacidadValor.textContent = `$${capacidadPago.toFixed(2)}`;
     
     // 7. Leer los valores de Monto solicitado, Plazo en años, Tasa anual simple, como enteros
     const monto = parseInt(txtMonto.value) || 0;
@@ -40,21 +70,21 @@ function calcular() {
     const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
     
     // 9. Mostrar en pantalla, en el componente lblInteresValor
-    lblInteresValor.textContent = interesPagar;
+    lblInteresValor.textContent = `$${interesPagar.toFixed(2)}`;
     
     // 10. Invocar a calcularTotalPagar
     const totalPagar = calcularTotalPagar(monto, interesPagar);
     
     // 11. Mostrar en pantalla, en el componente lblTotalValor
-    lblTotalValor.textContent = totalPagar;
+    lblTotalValor.textContent = `$${totalPagar.toFixed(2)}`;
     
     // 12. Invocar a calcularCuotaMensual
     const cuotaMensual = calcularCuotaMensual(totalPagar, plazoAnios);
     
     // 13. Mostrar en pantalla, en el componente lblCuotaValor
-    lblCuotaValor.textContent = cuotaMensual;
+    lblCuotaValor.textContent = `$${cuotaMensual.toFixed(2)}`;
     
-    // 14. Invocar a aprobarCredito (analizarCredito) y guardar el resultado en una variable
+    // 14. Invocar a aprobarCredito y guardar el resultado en una variable
     let aprobado = false;
     let mensajeCredito = "";
     
@@ -62,8 +92,6 @@ function calcular() {
     if (cuotaMensual > 0 && capacidadPago > 0) {
         aprobado = aprobarCredito(capacidadPago, cuotaMensual);
         
-        // 15. Si fue aprobado mostrar en pantalla el mensaje CREDITO APROBADO
-        // 16. Si fue rechazado mostrar en pantalla CREDITO RECHAZADO
         if (aprobado) {
             mensajeCredito = "CREDITO APROBADO";
         } else {
@@ -84,16 +112,9 @@ function calcular() {
     const spnEstadoCredito = document.getElementById('spnEstadoCredito');
     spnEstadoCredito.textContent = mensajeCredito;
     
-    // Cambiar color según el mensaje
-    if (mensajeCredito === "CREDITO APROBADO") {
-        spnEstadoCredito.style.color = "green";
-    } else if (mensajeCredito.includes("RECHAZADO")) {
-        spnEstadoCredito.style.color = "red";
-    } else {
-        spnEstadoCredito.style.color = "";
-    }
+    // Actualizar estilo del estado
+    actualizarEstiloEstado(mensajeCredito);
     
-    // Retornar los valores incluyendo el análisis
     return { disponible, capacidadPago, interesPagar, totalPagar, cuotaMensual, aprobado, mensajeCredito };
 }
 
@@ -103,54 +124,46 @@ function actualizarValoresCredito() {
     const plazoAnios = parseInt(txtPlazo.value) || 0;
     const tasaAnual = parseInt(txtTasaInteres.value) || 0;
     
-    // Calcular interés
     const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
-    lblInteresValor.textContent = interesPagar;
+    lblInteresValor.textContent = `$${interesPagar.toFixed(2)}`;
     
-    // Calcular total
     const totalPagar = calcularTotalPagar(monto, interesPagar);
-    lblTotalValor.textContent = totalPagar;
+    lblTotalValor.textContent = `$${totalPagar.toFixed(2)}`;
     
-    // Calcular cuota mensual
     const cuotaMensual = calcularCuotaMensual(totalPagar, plazoAnios);
-    lblCuotaValor.textContent = cuotaMensual;
+    lblCuotaValor.textContent = `$${cuotaMensual.toFixed(2)}`;
     
     return { interesPagar, totalPagar, cuotaMensual };
 }
 
 // === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
 function calcularCredito() {
-    // Llamar a la función calcular que actualiza todos los valores y analiza el crédito
     const resultado = calcular();
-    
-    // Mostrar en consola para depuración (opcional)
     console.log("Análisis de crédito:", resultado);
-    
     return resultado;
 }
 
 // === FUNCIÓN PARA REINICIAR ===
 function reiniciar() {
-    // Limpiar inputs
     txtIngresos.value = '';
     txtEgresos.value = '';
     txtMonto.value = '';
     txtPlazo.value = '';
     txtTasaInteres.value = '';
     
-    // Limpiar spans
-    lblDisponibleValor.textContent = '';
-    lblCapacidadValor.textContent = '';
-    lblInteresValor.textContent = '';
-    lblTotalValor.textContent = '';
-    lblCuotaValor.textContent = '';
+    lblDisponibleValor.textContent = '$0';
+    lblCapacidadValor.textContent = '$0';
+    lblInteresValor.textContent = '$0';
+    lblTotalValor.textContent = '$0';
+    lblCuotaValor.textContent = '$0';
+    
     const spnEstadoCredito = document.getElementById('spnEstadoCredito');
     spnEstadoCredito.textContent = 'ANALIZANDO...';
-    spnEstadoCredito.style.color = '';
+    
+    actualizarEstiloEstado('ANALIZANDO...');
 }
 
 // === EVENTOS ===
-// Ejecutar calcular cuando cambien los valores de ingresos o egresos
 txtIngresos.addEventListener('input', function() {
     calcular();
 });
@@ -159,35 +172,31 @@ txtEgresos.addEventListener('input', function() {
     calcular();
 });
 
-// Actualizar interés, total y cuota cuando cambien monto, plazo o tasa
 txtMonto.addEventListener('input', function() {
     actualizarValoresCredito();
-    calcular(); // Recalcular completo para actualizar estado
+    calcular();
 });
 
 txtPlazo.addEventListener('input', function() {
     actualizarValoresCredito();
-    calcular(); // Recalcular completo para actualizar estado
+    calcular();
 });
 
 txtTasaInteres.addEventListener('input', function() {
     actualizarValoresCredito();
-    calcular(); // Recalcular completo para actualizar estado
+    calcular();
 });
 
-// Evento para el botón Calcular Crédito
 const btnCalcularCredito = document.getElementById('btnCalcularCredito');
 if (btnCalcularCredito) {
     btnCalcularCredito.addEventListener('click', calcularCredito);
 }
 
-// Evento para el botón Reiniciar
 const btnReiniciar = document.getElementById('btnReiniciar');
 if (btnReiniciar) {
     btnReiniciar.addEventListener('click', reiniciar);
 }
 
-// Inicializar valores al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
     calcular();
 });
