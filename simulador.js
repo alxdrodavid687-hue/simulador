@@ -54,8 +54,47 @@ function calcular() {
     // 13. Mostrar en pantalla, en el componente lblCuotaValor
     lblCuotaValor.textContent = cuotaMensual;
     
-    // Retornar los valores incluyendo la cuota mensual
-    return { disponible, capacidadPago, interesPagar, totalPagar, cuotaMensual };
+    // 14. Invocar a aprobarCredito (analizarCredito) y guardar el resultado en una variable
+    let aprobado = false;
+    let mensajeCredito = "";
+    
+    // Validar que los valores sean válidos para el análisis
+    if (cuotaMensual > 0 && capacidadPago > 0) {
+        aprobado = aprobarCredito(capacidadPago, cuotaMensual);
+        
+        // 15. Si fue aprobado mostrar en pantalla el mensaje CREDITO APROBADO
+        // 16. Si fue rechazado mostrar en pantalla CREDITO RECHAZADO
+        if (aprobado) {
+            mensajeCredito = "CREDITO APROBADO";
+        } else {
+            mensajeCredito = "CREDITO RECHAZADO";
+        }
+    } else if (cuotaMensual > 0 && capacidadPago === 0) {
+        mensajeCredito = "CREDITO RECHAZADO (Sin capacidad de pago)";
+        aprobado = false;
+    } else if (cuotaMensual === 0 && monto > 0) {
+        mensajeCredito = "CREDITO RECHAZADO (Plazo inválido)";
+        aprobado = false;
+    } else {
+        mensajeCredito = "ANALIZANDO...";
+        aprobado = false;
+    }
+    
+    // Mostrar el mensaje en el componente spnEstadoCredito
+    const spnEstadoCredito = document.getElementById('spnEstadoCredito');
+    spnEstadoCredito.textContent = mensajeCredito;
+    
+    // Cambiar color según el mensaje
+    if (mensajeCredito === "CREDITO APROBADO") {
+        spnEstadoCredito.style.color = "green";
+    } else if (mensajeCredito.includes("RECHAZADO")) {
+        spnEstadoCredito.style.color = "red";
+    } else {
+        spnEstadoCredito.style.color = "";
+    }
+    
+    // Retornar los valores incluyendo el análisis
+    return { disponible, capacidadPago, interesPagar, totalPagar, cuotaMensual, aprobado, mensajeCredito };
 }
 
 // === FUNCIÓN PARA ACTUALIZAR SOLO EL INTERÉS, TOTAL Y CUOTA ===
@@ -79,56 +118,15 @@ function actualizarValoresCredito() {
     return { interesPagar, totalPagar, cuotaMensual };
 }
 
-// === FUNCIÓN PARA ACTUALIZAR EL ESTADO DEL CRÉDITO EN TIEMPO REAL ===
-function actualizarEstadoCredito() {
-    // Obtener capacidad de pago actual
-    const capacidadPago = parseFloat(lblCapacidadValor.textContent) || 0;
-    
-    // Obtener cuota mensual actual
-    const cuotaMensual = parseFloat(lblCuotaValor.textContent) || 0;
-    
-    // Obtener monto para validaciones adicionales
-    const monto = parseInt(txtMonto.value) || 0;
-    
-    // Evaluar crédito usando la función aprobarCredito
-    let estadoCredito = "ANALIZANDO...";
-    let aprobado = false;
-    
-    // Validar que los valores sean válidos
-    if (cuotaMensual > 0 && capacidadPago > 0) {
-        aprobado = aprobarCredito(capacidadPago, cuotaMensual);
-        estadoCredito = aprobado ? "APROBADO" : "RECHAZADO";
-    } else if (cuotaMensual > 0 && capacidadPago === 0) {
-        estadoCredito = "RECHAZADO (Sin capacidad de pago)";
-    } else if (cuotaMensual === 0 && monto > 0) {
-        estadoCredito = "RECHAZADO (Plazo inválido)";
-    } else if (cuotaMensual === 0 && monto === 0) {
-        estadoCredito = "ANALIZANDO...";
-    }
-    
-    // Mostrar estado del crédito
-    const spnEstadoCredito = document.getElementById('spnEstadoCredito');
-    spnEstadoCredito.textContent = estadoCredito;
-    
-    // Cambiar color según estado
-    if (estadoCredito === "APROBADO") {
-        spnEstadoCredito.style.color = "green";
-    } else if (estadoCredito.includes("RECHAZADO")) {
-        spnEstadoCredito.style.color = "red";
-    } else {
-        spnEstadoCredito.style.color = "";
-    }
-    
-    return aprobado;
-}
-
 // === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
 function calcularCredito() {
-    // Llamar a la función calcular que actualiza todos los valores
-    calcular();
+    // Llamar a la función calcular que actualiza todos los valores y analiza el crédito
+    const resultado = calcular();
     
-    // Actualizar el estado del crédito usando la función aprobarCredito
-    actualizarEstadoCredito();
+    // Mostrar en consola para depuración (opcional)
+    console.log("Análisis de crédito:", resultado);
+    
+    return resultado;
 }
 
 // === FUNCIÓN PARA REINICIAR ===
@@ -155,28 +153,26 @@ function reiniciar() {
 // Ejecutar calcular cuando cambien los valores de ingresos o egresos
 txtIngresos.addEventListener('input', function() {
     calcular();
-    actualizarEstadoCredito(); // Actualizar estado en tiempo real
 });
 
 txtEgresos.addEventListener('input', function() {
     calcular();
-    actualizarEstadoCredito(); // Actualizar estado en tiempo real
 });
 
-// Actualizar interés, total, cuota y estado cuando cambien monto, plazo o tasa
+// Actualizar interés, total y cuota cuando cambien monto, plazo o tasa
 txtMonto.addEventListener('input', function() {
     actualizarValoresCredito();
-    actualizarEstadoCredito(); // Actualizar estado en tiempo real
+    calcular(); // Recalcular completo para actualizar estado
 });
 
 txtPlazo.addEventListener('input', function() {
     actualizarValoresCredito();
-    actualizarEstadoCredito(); // Actualizar estado en tiempo real
+    calcular(); // Recalcular completo para actualizar estado
 });
 
 txtTasaInteres.addEventListener('input', function() {
     actualizarValoresCredito();
-    actualizarEstadoCredito(); // Actualizar estado en tiempo real
+    calcular(); // Recalcular completo para actualizar estado
 });
 
 // Evento para el botón Calcular Crédito
@@ -194,5 +190,4 @@ if (btnReiniciar) {
 // Inicializar valores al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
     calcular();
-    actualizarEstadoCredito();
 });
