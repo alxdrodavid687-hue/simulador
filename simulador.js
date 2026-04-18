@@ -1,6 +1,9 @@
 // === REFERENCIAS A ELEMENTOS DEL DOM ===
 const txtIngresos = document.getElementById('txtIngresos');
 const txtEgresos = document.getElementById('txtEgresos');
+const txtMonto = document.getElementById('txtMonto');
+const txtPlazo = document.getElementById('txtPlazo');
+const txtTasaInteres = document.getElementById('txtTasaInteres');
 const lblDisponibleValor = document.getElementById('lblDisponibleValor');
 const lblCapacidadValor = document.getElementById('lblCapacidadValor');
 
@@ -20,7 +23,6 @@ function calcular() {
     lblDisponibleValor.textContent = disponible;
     
     // 5. Llamar a la función calcularCapacidadPago y guardar el retorno en una variable
-    // Se le pasa como parámetro el valor disponible
     const capacidadPago = calcularCapacidadPago(disponible);
     
     // 6. Mostrar en pantalla, en el componente lblCapacidadValor
@@ -29,7 +31,7 @@ function calcular() {
     return disponible;
 }
 
-// === FUNCIÓN PARA CALCULAR CRÉDITO (AL PRESIONAR EL BOTÓN) ===
+// === FUNCIÓN PARA CALCULAR CRÉDITO ===
 function calcularCredito() {
     // Primero actualizar disponibilidad y capacidad de pago
     calcular();
@@ -42,8 +44,8 @@ function calcularCredito() {
     // Obtener la capacidad de pago actual
     const capacidadPago = parseFloat(lblCapacidadValor.textContent) || 0;
     
-    // Calcular interés a pagar (fórmula: monto * tasa * plazo)
-    const interesPagar = monto * (tasaInteres / 100) * plazo;
+    // Llamar a la función calcularInteresSimple
+    const interesPagar = calcularInteresSimple(monto, tasaInteres, plazo);
     
     // Calcular total del préstamo
     const totalPrestamo = monto + interesPagar;
@@ -53,8 +55,10 @@ function calcularCredito() {
     
     // Evaluar estado del crédito (la cuota no debe superar la capacidad de pago)
     let estadoCredito = "ANALIZANDO...";
-    if (cuotaMensual > 0) {
+    if (cuotaMensual > 0 && capacidadPago > 0) {
         estadoCredito = cuotaMensual <= capacidadPago ? "APROBADO" : "RECHAZADO";
+    } else if (cuotaMensual > 0 && capacidadPago === 0) {
+        estadoCredito = "RECHAZADO";
     }
     
     // Mostrar resultados en pantalla
