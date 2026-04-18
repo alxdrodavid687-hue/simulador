@@ -1,4 +1,5 @@
-//AQUI TODA LA LOGICA DE LAS FUNCIONES DEL NEGOCIO
+// ===== FUNCIONES DE NEGOCIO =====
+
 // Función para calcular el valor disponible (ingresos - egresos)
 // Si el resultado es negativo, retorna 0
 function calcularDisponible(ingresos, egresos) {
@@ -8,37 +9,37 @@ function calcularDisponible(ingresos, egresos) {
     return disponible > 0 ? disponible : 0;
 }
 
-// Función para calcular capacidad de pago (ejemplo: 30% del disponible)
-function calcularCapacidadPago(disponible) {
-    return disponible * 0.3;
+// Función para calcular la capacidad de pago (50% del valor disponible)
+// Parámetros: montoDisponible
+// Retorna: La capacidad de pago
+function calcularCapacidadPago(montoDisponible) {
+    const disponible = parseFloat(montoDisponible) || 0;
+    return disponible * 0.5;  // 50% del valor disponible
 }
 
-// Función para calcular interés a pagar (interés simple para el ejemplo)
-function calcularInteresPagar(monto, tasaInteres, plazoAnios) {
+// Función para calcular el interés simple
+// Parámetros: Monto, Tasa, plazoAnios
+// Retorna: El valor de interés que debe pagar
+function calcularInteresSimple(monto, tasa, plazoAnios) {
     const montoNum = parseFloat(monto) || 0;
-    const tasaNum = parseFloat(tasaInteres) || 0;
+    const tasaNum = parseFloat(tasa) || 0;
     const plazoNum = parseFloat(plazoAnios) || 0;
-    return montoNum * (tasaNum / 100) * plazoNum;
+    
+    // Fórmula: plazo en años * monto * (tasa / 100)
+    const interes = plazoNum * montoNum * (tasaNum / 100);
+    
+    return interes;
 }
 
-// Función para calcular total del préstamo
-function calcularTotalPrestamo(monto, interesPagar) {
-    return (parseFloat(monto) || 0) + (parseFloat(interesPagar) || 0);
-}
-
-// Función para calcular cuota mensual
-function calcularCuotaMensual(totalPrestamo, plazoAnios) {
-    const total = parseFloat(totalPrestamo) || 0;
-    const meses = (parseFloat(plazoAnios) || 0) * 12;
-    if (meses === 0) return 0;
-    return total / meses;
-}
-
-// Función para evaluar estado del crédito
-function evaluarEstadoCredito(cuotaMensual, capacidadPago) {
-    if (cuotaMensual <= capacidadPago) {
-        return "APROBADO";
-    } else {
-        return "RECHAZADO";
-    }
+// Función para calcular el valor total a pagar
+// Parámetros: monto, interes
+// Retorna: el valor total a pagar (monto + interés + USD 100 por impuestos y contribución a SOLCA)
+function calcularTotalPagar(monto, interes) {
+    const montoNum = parseFloat(monto) || 0;
+    const interesNum = parseFloat(interes) || 0;
+    const impuestosSOLCA = 100; // USD 100 por impuestos y contribución a SOLCA
+    
+    const totalPagar = montoNum + interesNum + impuestosSOLCA;
+    
+    return totalPagar;
 }

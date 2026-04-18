@@ -29,20 +29,31 @@ function calcular() {
     // 6. Mostrar en pantalla, en el componente lblCapacidadValor
     lblCapacidadValor.textContent = capacidadPago;
     
-    // ===== NUEVAS INSTRUCCIONES =====
-    // 1. Leer los valores de Monto solicitado, Plazo en años, Tasa anual simple, como enteros
+    // 7. Leer los valores de Monto solicitado, Plazo en años, Tasa anual simple, como enteros
     const monto = parseInt(txtMonto.value) || 0;
     const plazoAnios = parseInt(txtPlazo.value) || 0;
     const tasaAnual = parseInt(txtTasaInteres.value) || 0;
     
-    // 2. Llamar a la función calcularInteresSimple y guardar el retorno en una variable
+    // 8. Llamar a la función calcularInteresSimple y guardar el retorno en una variable
     const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
     
-    // 3. Mostrar en pantalla, en el componente lblInteresValor
+    // 9. Mostrar en pantalla, en el componente lblInteresValor
     lblInteresValor.textContent = interesPagar;
     
     // Retornar los valores por si se necesitan en otros cálculos
     return { disponible, capacidadPago, interesPagar };
+}
+
+// === FUNCIÓN PARA ACTUALIZAR SOLO EL INTERÉS ===
+function actualizarInteres() {
+    const monto = parseInt(txtMonto.value) || 0;
+    const plazoAnios = parseInt(txtPlazo.value) || 0;
+    const tasaAnual = parseInt(txtTasaInteres.value) || 0;
+    
+    const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
+    lblInteresValor.textContent = interesPagar;
+    
+    return interesPagar;
 }
 
 // === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
@@ -54,8 +65,9 @@ function calcularCredito() {
     const monto = parseInt(txtMonto.value) || 0;
     const plazo = parseInt(txtPlazo.value) || 0;
     
-    // Calcular total del préstamo (monto + interés)
-    const totalPrestamo = monto + interesPagar;
+    // Calcular total a pagar usando la función calcularTotalPagar
+    // Incluye: monto + interés + USD 100 (impuestos SOLCA)
+    const totalPrestamo = calcularTotalPagar(monto, interesPagar);
     
     // Calcular cuota mensual (total / (plazo * 12))
     const cuotaMensual = plazo > 0 ? totalPrestamo / (plazo * 12) : 0;
@@ -84,18 +96,6 @@ function calcularCredito() {
     } else {
         spnEstadoCredito.style.color = "";
     }
-}
-
-// === FUNCIÓN PARA ACTUALIZAR SOLO EL INTERÉS (cuando cambian monto, plazo o tasa) ===
-function actualizarInteres() {
-    const monto = parseInt(txtMonto.value) || 0;
-    const plazoAnios = parseInt(txtPlazo.value) || 0;
-    const tasaAnual = parseInt(txtTasaInteres.value) || 0;
-    
-    const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
-    lblInteresValor.textContent = interesPagar;
-    
-    return interesPagar;
 }
 
 // === FUNCIÓN PARA REINICIAR ===
