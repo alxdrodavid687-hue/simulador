@@ -3,7 +3,7 @@ const txtIngresos = document.getElementById('txtIngresos');
 const txtEgresos = document.getElementById('txtEgresos');
 const lblDisponibleValor = document.getElementById('lblDisponibleValor');
 
-// === FUNCIÓN CALCULAR (solicitada en la imagen) ===
+// === FUNCIÓN CALCULAR ===
 // Esta función no recibe parámetros
 function calcular() {
     // 1. Leer el valor de ingresos (float)
@@ -18,12 +18,19 @@ function calcular() {
     // 4. Mostrar en pantalla, en el componente lblDisponibleValor
     lblDisponibleValor.textContent = disponible;
     
-    // Retornar el valor por si se necesita en otros cálculos
+    // 5. Calcular capacidad de pago (50% del disponible)
+    const capacidadPago = calcularCapacidadPago(disponible);
+    
+    // 6. Mostrar capacidad de pago en el componente spnCapacidadPago
+    const spnCapacidadPago = document.getElementById('spnCapacidadPago');
+    if (spnCapacidadPago) {
+        spnCapacidadPago.textContent = capacidadPago;
+    }
+    
     return disponible;
 }
 
-// === CÓDIGO ADICIONAL PARA QUE LA FUNCIÓN SE EJECUTE AUTOMÁTICAMENTE ===
-
+// === EVENTOS ===
 // Ejecutar calcular cuando se carga la página (valores iniciales)
 document.addEventListener('DOMContentLoaded', function() {
     calcular();
