@@ -63,3 +63,15 @@ function calcularCuotaMensual(total, plazoAnios) {
     const cuotaMensual = totalNum / plazoMeses;
     return cuotaMensual;
 }
+
+// Función para aprobar o rechazar el crédito
+// Parámetros: capacidadPago, cuotaMensual
+// Retorna: true si capacidadPago > cuotaMensual, false en caso contrario
+function aprobarCredito(capacidadPago, cuotaMensual) {
+    const capacidad = parseFloat(capacidadPago) || 0;
+    const cuota = parseFloat(cuotaMensual) || 0;
+    
+    // Si la capacidad de pago es mayor a la cuota mensual, retorna true (aprobado)
+    // Caso contrario, retorna false (rechazado)
+    return capacidad > cuota;
+}

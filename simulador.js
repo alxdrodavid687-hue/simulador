@@ -8,7 +8,7 @@ const lblDisponibleValor = document.getElementById('lblDisponibleValor');
 const lblCapacidadValor = document.getElementById('lblCapacidadValor');
 const lblInteresValor = document.getElementById('lblInteresValor');
 const lblTotalValor = document.getElementById('lblTotalValor');
-const lblCuotaValor = document.getElementById('lblCuotaValor'); // NUEVA REFERENCIA
+const lblCuotaValor = document.getElementById('lblCuotaValor');
 
 // === FUNCIÓN CALCULAR ===
 // Esta función no recibe parámetros
@@ -79,18 +79,25 @@ function actualizarValoresCredito() {
     return { interesPagar, totalPagar, cuotaMensual };
 }
 
-// === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
-function calcularCredito() {
-    // Llamar a la función calcular que actualiza todos los valores
-    const { disponible, capacidadPago, interesPagar, totalPagar, cuotaMensual } = calcular();
+// === FUNCIÓN PARA ACTUALIZAR EL ESTADO DEL CRÉDITO EN TIEMPO REAL ===
+function actualizarEstadoCredito() {
+    // Obtener capacidad de pago actual
+    const capacidadPago = parseFloat(lblCapacidadValor.textContent) || 0;
     
-    // Obtener valores actualizados
+    // Obtener cuota mensual actual
+    const cuotaMensual = parseFloat(lblCuotaValor.textContent) || 0;
+    
+    // Obtener monto para validaciones adicionales
     const monto = parseInt(txtMonto.value) || 0;
     
-    // Evaluar estado del crédito (la cuota no debe superar la capacidad de pago)
+    // Evaluar crédito usando la función aprobarCredito
     let estadoCredito = "ANALIZANDO...";
+    let aprobado = false;
+    
+    // Validar que los valores sean válidos
     if (cuotaMensual > 0 && capacidadPago > 0) {
-        estadoCredito = cuotaMensual <= capacidadPago ? "APROBADO" : "RECHAZADO";
+        aprobado = aprobarCredito(capacidadPago, cuotaMensual);
+        estadoCredito = aprobado ? "APROBADO" : "RECHAZADO";
     } else if (cuotaMensual > 0 && capacidadPago === 0) {
         estadoCredito = "RECHAZADO (Sin capacidad de pago)";
     } else if (cuotaMensual === 0 && monto > 0) {
@@ -100,10 +107,10 @@ function calcularCredito() {
     }
     
     // Mostrar estado del crédito
-    document.getElementById('spnEstadoCredito').textContent = estadoCredito;
+    const spnEstadoCredito = document.getElementById('spnEstadoCredito');
+    spnEstadoCredito.textContent = estadoCredito;
     
     // Cambiar color según estado
-    const spnEstadoCredito = document.getElementById('spnEstadoCredito');
     if (estadoCredito === "APROBADO") {
         spnEstadoCredito.style.color = "green";
     } else if (estadoCredito.includes("RECHAZADO")) {
@@ -111,6 +118,17 @@ function calcularCredito() {
     } else {
         spnEstadoCredito.style.color = "";
     }
+    
+    return aprobado;
+}
+
+// === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
+function calcularCredito() {
+    // Llamar a la función calcular que actualiza todos los valores
+    calcular();
+    
+    // Actualizar el estado del crédito usando la función aprobarCredito
+    actualizarEstadoCredito();
 }
 
 // === FUNCIÓN PARA REINICIAR ===
@@ -137,23 +155,28 @@ function reiniciar() {
 // Ejecutar calcular cuando cambien los valores de ingresos o egresos
 txtIngresos.addEventListener('input', function() {
     calcular();
+    actualizarEstadoCredito(); // Actualizar estado en tiempo real
 });
 
 txtEgresos.addEventListener('input', function() {
     calcular();
+    actualizarEstadoCredito(); // Actualizar estado en tiempo real
 });
 
-// Actualizar interés, total y cuota cuando cambien monto, plazo o tasa
+// Actualizar interés, total, cuota y estado cuando cambien monto, plazo o tasa
 txtMonto.addEventListener('input', function() {
     actualizarValoresCredito();
+    actualizarEstadoCredito(); // Actualizar estado en tiempo real
 });
 
 txtPlazo.addEventListener('input', function() {
     actualizarValoresCredito();
+    actualizarEstadoCredito(); // Actualizar estado en tiempo real
 });
 
 txtTasaInteres.addEventListener('input', function() {
     actualizarValoresCredito();
+    actualizarEstadoCredito(); // Actualizar estado en tiempo real
 });
 
 // Evento para el botón Calcular Crédito
@@ -171,4 +194,5 @@ if (btnReiniciar) {
 // Inicializar valores al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
     calcular();
+    actualizarEstadoCredito();
 });
