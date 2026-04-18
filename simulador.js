@@ -6,6 +6,7 @@ const txtPlazo = document.getElementById('txtPlazo');
 const txtTasaInteres = document.getElementById('txtTasaInteres');
 const lblDisponibleValor = document.getElementById('lblDisponibleValor');
 const lblCapacidadValor = document.getElementById('lblCapacidadValor');
+const lblInteresValor = document.getElementById('lblInteresValor');
 
 // === FUNCIÓN CALCULAR ===
 // Esta función no recibe parámetros
@@ -28,26 +29,32 @@ function calcular() {
     // 6. Mostrar en pantalla, en el componente lblCapacidadValor
     lblCapacidadValor.textContent = capacidadPago;
     
-    return disponible;
+    // ===== NUEVAS INSTRUCCIONES =====
+    // 1. Leer los valores de Monto solicitado, Plazo en años, Tasa anual simple, como enteros
+    const monto = parseInt(txtMonto.value) || 0;
+    const plazoAnios = parseInt(txtPlazo.value) || 0;
+    const tasaAnual = parseInt(txtTasaInteres.value) || 0;
+    
+    // 2. Llamar a la función calcularInteresSimple y guardar el retorno en una variable
+    const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
+    
+    // 3. Mostrar en pantalla, en el componente lblInteresValor
+    lblInteresValor.textContent = interesPagar;
+    
+    // Retornar los valores por si se necesitan en otros cálculos
+    return { disponible, capacidadPago, interesPagar };
 }
 
-// === FUNCIÓN PARA CALCULAR CRÉDITO ===
+// === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
 function calcularCredito() {
-    // Primero actualizar disponibilidad y capacidad de pago
-    calcular();
+    // Llamar a la función calcular que actualiza todos los valores
+    const { disponible, capacidadPago, interesPagar } = calcular();
     
-    // Obtener valores de los inputs de crédito
-    const monto = parseFloat(txtMonto.value) || 0;
-    const plazo = parseFloat(txtPlazo.value) || 0;
-    const tasaInteres = parseFloat(txtTasaInteres.value) || 0;
+    // Obtener valores actualizados
+    const monto = parseInt(txtMonto.value) || 0;
+    const plazo = parseInt(txtPlazo.value) || 0;
     
-    // Obtener la capacidad de pago actual
-    const capacidadPago = parseFloat(lblCapacidadValor.textContent) || 0;
-    
-    // Llamar a la función calcularInteresSimple
-    const interesPagar = calcularInteresSimple(monto, tasaInteres, plazo);
-    
-    // Calcular total del préstamo
+    // Calcular total del préstamo (monto + interés)
     const totalPrestamo = monto + interesPagar;
     
     // Calcular cuota mensual (total / (plazo * 12))
@@ -58,11 +65,12 @@ function calcularCredito() {
     if (cuotaMensual > 0 && capacidadPago > 0) {
         estadoCredito = cuotaMensual <= capacidadPago ? "APROBADO" : "RECHAZADO";
     } else if (cuotaMensual > 0 && capacidadPago === 0) {
-        estadoCredito = "RECHAZADO";
+        estadoCredito = "RECHAZADO (Sin capacidad de pago)";
+    } else if (cuotaMensual === 0 && monto > 0) {
+        estadoCredito = "RECHAZADO (Plazo inválido)";
     }
     
-    // Mostrar resultados en pantalla
-    document.getElementById('spnInteresPagar').textContent = interesPagar.toFixed(2);
+    // Mostrar resultados adicionales en pantalla
     document.getElementById('spnTotalPrestamo').textContent = totalPrestamo.toFixed(2);
     document.getElementById('spnCuotaMensual').textContent = cuotaMensual.toFixed(2);
     document.getElementById('spnEstadoCredito').textContent = estadoCredito;
@@ -71,11 +79,23 @@ function calcularCredito() {
     const spnEstadoCredito = document.getElementById('spnEstadoCredito');
     if (estadoCredito === "APROBADO") {
         spnEstadoCredito.style.color = "green";
-    } else if (estadoCredito === "RECHAZADO") {
+    } else if (estadoCredito.includes("RECHAZADO")) {
         spnEstadoCredito.style.color = "red";
     } else {
         spnEstadoCredito.style.color = "";
     }
+}
+
+// === FUNCIÓN PARA ACTUALIZAR SOLO EL INTERÉS (cuando cambian monto, plazo o tasa) ===
+function actualizarInteres() {
+    const monto = parseInt(txtMonto.value) || 0;
+    const plazoAnios = parseInt(txtPlazo.value) || 0;
+    const tasaAnual = parseInt(txtTasaInteres.value) || 0;
+    
+    const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
+    lblInteresValor.textContent = interesPagar;
+    
+    return interesPagar;
 }
 
 // === FUNCIÓN PARA REINICIAR ===
@@ -90,7 +110,7 @@ function reiniciar() {
     // Limpiar spans
     lblDisponibleValor.textContent = '';
     lblCapacidadValor.textContent = '';
-    document.getElementById('spnInteresPagar').textContent = '';
+    lblInteresValor.textContent = '';
     document.getElementById('spnTotalPrestamo').textContent = '';
     document.getElementById('spnCuotaMensual').textContent = '';
     const spnEstadoCredito = document.getElementById('spnEstadoCredito');
@@ -100,8 +120,26 @@ function reiniciar() {
 
 // === EVENTOS ===
 // Ejecutar calcular cuando cambien los valores de ingresos o egresos
-txtIngresos.addEventListener('input', calcular);
-txtEgresos.addEventListener('input', calcular);
+txtIngresos.addEventListener('input', function() {
+    calcular();
+});
+
+txtEgresos.addEventListener('input', function() {
+    calcular();
+});
+
+// Actualizar interés cuando cambien monto, plazo o tasa
+txtMonto.addEventListener('input', function() {
+    actualizarInteres();
+});
+
+txtPlazo.addEventListener('input', function() {
+    actualizarInteres();
+});
+
+txtTasaInteres.addEventListener('input', function() {
+    actualizarInteres();
+});
 
 // Evento para el botón Calcular Crédito
 const btnCalcularCredito = document.getElementById('btnCalcularCredito');
