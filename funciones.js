@@ -43,3 +43,23 @@ function calcularTotalPagar(monto, interes) {
     
     return totalPagar;
 }
+
+// Función para calcular la cuota mensual
+// Parámetros: total, plazoAnios
+// Retorna: El valor de la cuota mensual
+function calcularCuotaMensual(total, plazoAnios) {
+    const totalNum = parseFloat(total) || 0;
+    const plazoAniosNum = parseFloat(plazoAnios) || 0;
+    
+    // Convertir plazo de años a meses
+    const plazoMeses = plazoAniosNum * 12;
+    
+    // Calcular cuota mensual (total / número de meses)
+    // Si el plazo es 0, retornar 0 para evitar división por cero
+    if (plazoMeses === 0) {
+        return 0;
+    }
+    
+    const cuotaMensual = totalNum / plazoMeses;
+    return cuotaMensual;
+}

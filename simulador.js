@@ -7,7 +7,7 @@ const txtTasaInteres = document.getElementById('txtTasaInteres');
 const lblDisponibleValor = document.getElementById('lblDisponibleValor');
 const lblCapacidadValor = document.getElementById('lblCapacidadValor');
 const lblInteresValor = document.getElementById('lblInteresValor');
-const lblTotalValor = document.getElementById('lblTotalValor'); // NUEVA REFERENCIA
+const lblTotalValor = document.getElementById('lblTotalValor');
 
 // === FUNCIÓN CALCULAR ===
 // Esta función no recibe parámetros
@@ -60,11 +60,24 @@ function actualizarInteresYTotal() {
     const interesPagar = calcularInteresSimple(monto, tasaAnual, plazoAnios);
     lblInteresValor.textContent = interesPagar;
     
-    // Actualizar también el total cuando cambian los valores
     const totalPagar = calcularTotalPagar(monto, interesPagar);
     lblTotalValor.textContent = totalPagar;
     
     return { interesPagar, totalPagar };
+}
+
+// === FUNCIÓN PARA ACTUALIZAR LA CUOTA MENSUAL EN TIEMPO REAL ===
+function actualizarCuotaMensual() {
+    const total = parseFloat(lblTotalValor.textContent) || 0;
+    const plazo = parseInt(txtPlazo.value) || 0;
+    
+    const cuotaMensual = calcularCuotaMensual(total, plazo);
+    const spnCuotaMensual = document.getElementById('spnCuotaMensual');
+    if (spnCuotaMensual) {
+        spnCuotaMensual.textContent = cuotaMensual.toFixed(2);
+    }
+    
+    return cuotaMensual;
 }
 
 // === FUNCIÓN PARA CALCULAR CRÉDITO COMPLETO ===
@@ -76,9 +89,8 @@ function calcularCredito() {
     const monto = parseInt(txtMonto.value) || 0;
     const plazo = parseInt(txtPlazo.value) || 0;
     
-    // Usar el totalPagar ya calculado (incluye SOLCA)
-    // Calcular cuota mensual (total / (plazo * 12))
-    const cuotaMensual = plazo > 0 ? totalPagar / (plazo * 12) : 0;
+    // Calcular cuota mensual usando la función calcularCuotaMensual
+    const cuotaMensual = calcularCuotaMensual(totalPagar, plazo);
     
     // Evaluar estado del crédito (la cuota no debe superar la capacidad de pago)
     let estadoCredito = "ANALIZANDO...";
@@ -129,23 +141,28 @@ function reiniciar() {
 // Ejecutar calcular cuando cambien los valores de ingresos o egresos
 txtIngresos.addEventListener('input', function() {
     calcular();
+    actualizarCuotaMensual(); // Actualizar cuota cuando cambian ingresos/egresos
 });
 
 txtEgresos.addEventListener('input', function() {
     calcular();
+    actualizarCuotaMensual(); // Actualizar cuota cuando cambian ingresos/egresos
 });
 
-// Actualizar interés y total cuando cambien monto, plazo o tasa
+// Actualizar interés, total y cuota cuando cambien monto, plazo o tasa
 txtMonto.addEventListener('input', function() {
     actualizarInteresYTotal();
+    actualizarCuotaMensual(); // Actualizar cuota cuando cambia el monto
 });
 
 txtPlazo.addEventListener('input', function() {
     actualizarInteresYTotal();
+    actualizarCuotaMensual(); // Actualizar cuota cuando cambia el plazo
 });
 
 txtTasaInteres.addEventListener('input', function() {
     actualizarInteresYTotal();
+    actualizarCuotaMensual(); // Actualizar cuota cuando cambia la tasa
 });
 
 // Evento para el botón Calcular Crédito
@@ -163,4 +180,5 @@ if (btnReiniciar) {
 // Inicializar valores al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
     calcular();
+    actualizarCuotaMensual();
 });
