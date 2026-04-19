@@ -1,0 +1,11 @@
+PROMPT 1
+antes de proceder con el código ahora tengo las siguiente indicaciones: agregar todas las validaciones que considere necesarias 
+para su formulario, como tipos de datos, montos máximos y mínimos, campos obligatorios. 
+Determinar todo este conjunto de reglas para que las IA las implemente, esas validaciones se ejecutarán 
+una vez que presione el botón Calcular Simulador y aparecerán los errores debajo de cada campo validado.
+Realiza una explicación en cómo cambia, afecta al interfaz del simulador o que cambios 
+implica cuando menciona validaciones
+PROMPT 2
+ genial una consulta: a que refieres cuando dices diseño UX puro? 
+además: cuál es la diferencia con el diseño UI?
+PROMPT 3
