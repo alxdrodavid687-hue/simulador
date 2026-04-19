@@ -9,3 +9,7 @@ PROMPT 2
  genial una consulta: a que refieres cuando dices diseño UX puro? 
 además: cuál es la diferencia con el diseño UI?
 PROMPT 3
+gracias ahora realiza las validaciones luego indicame el código completo en html, js, css 
+además de los cambios que hiciste en cada sección
+PROMPT 4
+implementa el modo pro 

@@ -1,124 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Banco Atlántida | Simulador de Crédito</title>
-    <link rel="stylesheet" href="simulador.css">
-    <!-- Font Awesome para iconos (opcional pero recomendado) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco Atlántida | Simulador PRO</title>
+<link rel="stylesheet" href="simulador.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
-    <div class="container">
-        <!-- HEADER CON LOGO DEL BANCO ATLÁNTIDA -->
-        <div class="header-logo">
-            <div class="logo-container">
-                <i class="fas fa-landmark logo-icon"></i>
-                <div class="logo-text">
-                    BANCO <span>ATLÁNTIDA</span>
-                </div>
-            </div>
-            <div class="logo-subtitle">
-                <i class="fas fa-hand-holding-usd"></i> Tu futuro comienza hoy | Simulador de Crédito
-            </div>
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+        <i class="fas fa-landmark"></i>
+        <h1>BANCO <span>ATLÁNTIDA</span></h1>
+        <p>EL BANCO QUE HACE REALIDAD TUS SUEÑOS</p>
+        <p> SIMULADOR DE CRÉDITO INTELIGENTE</p>
+    </header>
+
+    <!-- CARD -->
+    <div class="card">
+
+        <div class="input-group">
+            <label>INGRESOS</label>
+            <input type="number" id="txtIngresos">
+            <small class="error" id="errorIngresos"></small>
         </div>
 
-        <!-- CONTENIDO PRINCIPAL -->
-        <div class="content">
-            <!-- SECCIÓN DATOS FINANCIEROS -->
-            <div class="section-title">
-                <i class="fas fa-chart-line"></i>
-                <h2>Datos Financieros</h2>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-arrow-up"></i> Ingresos Mensuales</label>
-                <input type="text" id="txtIngresos" placeholder="Ej: 5000">
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-arrow-down"></i> Egresos Mensuales</label>
-                <input type="text" id="txtEgresos" placeholder="Ej: 3000">
-            </div>
-
-            <!-- TARJETAS DE RESULTADOS FINANCIEROS -->
-            <div class="results-grid">
-                <div class="result-card">
-                    <div class="result-label"><i class="fas fa-coins"></i> Disponible</div>
-                    <div class="result-value" id="lblDisponibleValor">$0</div>
-                </div>
-                <div class="result-card primary">
-                    <div class="result-label"><i class="fas fa-credit-card"></i> Capacidad de Pago</div>
-                    <div class="result-value" id="lblCapacidadValor">$0</div>
-                </div>
-            </div>
-
-            <!-- SECCIÓN SOLICITUD DE CRÉDITO -->
-            <div class="section-title">
-                <i class="fas fa-file-invoice-dollar"></i>
-                <h2>Solicitud de Crédito</h2>
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-dollar-sign"></i> Monto Solicitado</label>
-                <input type="text" id="txtMonto" placeholder="Ej: 10000">
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-calendar-alt"></i> Plazo (años)</label>
-                <input type="text" id="txtPlazo" placeholder="Ej: 2">
-            </div>
-
-            <div class="form-group">
-                <label><i class="fas fa-percent"></i> Tasa de Interés Anual</label>
-                <input type="text" id="txtTasaInteres" placeholder="Ej: 10">
-            </div>
-
-            <!-- RESULTADOS DEL CRÉDITO -->
-            <div class="credit-section">
-                <div class="results-grid">
-                    <div class="result-card">
-                        <div class="result-label"><i class="fas fa-charging-station"></i> Interés a Pagar</div>
-                        <div class="result-value" id="lblInteresValor">$0</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label"><i class="fas fa-receipt"></i> Total a Pagar</div>
-                        <div class="result-value" id="lblTotalValor">$0</div>
-                    </div>
-                    <div class="result-card">
-                        <div class="result-label"><i class="fas fa-calendar-week"></i> Cuota Mensual</div>
-                        <div class="result-value" id="lblCuotaValor">$0</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ESTADO DEL CRÉDITO -->
-            <div class="status-container analyzing" id="statusContainer">
-                <div class="status-icon">
-                    <i class="fas fa-chart-simple"></i>
-                </div>
-                <div class="status-text" id="spnEstadoCredito">ANALIZANDO...</div>
-            </div>
-
-            <!-- BOTONES DE ACCIÓN -->
-            <div class="buttons">
-                <button class="btn btn-primary" id="btnCalcularCredito">
-                    <i class="fas fa-calculator"></i> Calcular Crédito
-                </button>
-                <button class="btn btn-secondary" id="btnReiniciar">
-                    <i class="fas fa-undo-alt"></i> Reiniciar
-                </button>
-            </div>
+        <div class="input-group">
+            <label>EGRESOS</label>
+            <input type="number" id="txtEgresos">
+            <small class="error" id="errorEgresos"></small>
         </div>
 
-        <!-- FOOTER -->
-        <div class="footer">
-            <p><i class="fas fa-shield-alt"></i> Banco Atlántida - Simulador de Crédito | Tasas sujetas a cambios</p>
+        <div class="input-group">
+            <label>MONTO</label>
+            <input type="number" id="txtMonto">
+            <small class="error" id="errorMonto"></small>
         </div>
+
+        <div class="input-group">
+            <label>PLAZO</label>
+            <input type="number" id="txtPlazo">
+            <small class="error" id="errorPlazo"></small>
+        </div>
+
+        <div class="input-group">
+            <label>TASA (%)</label>
+            <input type="number" id="txtTasaInteres">
+            <small class="error" id="errorTasa"></small>
+        </div>
+
+        <!-- RESULTADO -->
+        <div class="result">
+
+            <h2 id="cuota">$0</h2>
+            <p>Cuota mensual</p>
+
+            <div class="progress">
+                <div id="barra"></div>
+            </div>
+
+            <h3 id="estado">ANALIZANDO...</h3>
+
+        </div>
+
+        <button id="btnCalcular">
+            Evaluar crédito
+        </button>
+
     </div>
 
-    <script src="funciones.js"></script>
-    <script src="simulador.js"></script>
+</div>
+        <p> 2026. Banco Atlántida es parte de la Corporación INNOVA </p> 
+<script src="funciones.js"></script>
+<script src="simulador.js"></script>
+
 </body>
 </html>
